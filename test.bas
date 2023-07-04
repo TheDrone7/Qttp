@@ -13,6 +13,6 @@ PRINT "Listening at: http://localhost:"; RIGHT$(STR$(myServer.port), LEN(STR$(my
 startServer myServer
 
 closeServer myServer
-PRINT "Server closed. (New one started)"
+PRINT "Server closed."
 
 '$INCLUDE: 'lib/qttp.bm'
