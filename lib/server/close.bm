@@ -1,0 +1,7 @@
+' Shut down a HTTP server, stop listening for connections.
+'
+' Syntax: `closeServer(server)`
+' - `server` - The server to shut down.
+SUB closeServer(userServer AS QttpServer)
+    CLOSE userServer.handler
+END SUB

@@ -1,0 +1,25 @@
+SUB qttpSplitString(stringToSplit AS STRING, delimiter AS STRING, result() AS STRING)
+    DIM count AS INTEGER
+    DIM startIndex AS INTEGER
+    DIM endIndex AS INTEGER
+    
+    count = 0
+    startIndex = 0
+    
+    DO
+        endIndex = INSTR(startIndex, stringToSplit, delimiter)
+        
+        IF endIndex = 0 THEN
+            endIndex = LEN(stringToSplit) + 1
+        end IF
+        
+        result(count) = MID$(stringToSplit, startIndex, endIndex - startIndex)
+        count = count + 1
+        REDIM _PRESERVE result(count)
+        
+        startIndex = endIndex + LEN(delimiter)
+    LOOP UNTIL startIndex > LEN(stringToSplit)
+    
+    ' Add in the last part as well.
+    result(count) = MID$(stringToSplit, startIndex, endIndex - startIndex)
+end SUB

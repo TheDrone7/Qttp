@@ -1,0 +1,21 @@
+' Creates a new HTTP server.
+'
+' Example:
+' ```basic
+' DIM server AS QttpServer
+' createServer(server, 3000)
+' ```
+'
+' Syntax: `createServer(userServer, port%)`
+' - `userServer` - The server to initialize.
+' - `port%` - The port the server should listen for connections on.
+'
+SUB createServer(userServer AS QttpServer, port%)
+    userServer.port = port%
+    userServer.handler = _OPENHOST("TCP/IP:" + STR$(port%))
+    if (userServer.handler = 0) THEN
+        PRINT "Error starting server on port:" + STR$(port%)
+        PRINT "Make sure the port is valid and not already in use."
+        SYSTEM
+    END if
+END SUB

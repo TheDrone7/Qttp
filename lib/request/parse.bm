@@ -1,0 +1,30 @@
+' Parse a request into its components and return a QttpRequest object
+'
+' Example: `parseRequest(request, requestObject)`
+' - `request`: the raw HTTP request to parse
+' - `requestObject`: the QttpRequest object to populate
+SUB parseRequest(request AS STRING, parsedRequest AS QttpRequest)
+    DIM requestLines(0) AS STRING
+    
+    ' Split the request into lines
+    qttpSplitString request, QTTP_CRLF, requestLines()
+    
+    ' Parse the first line
+    DIM firstLineData(0) AS STRING
+    qttpSplitString requestLines(0), " ", firstLineData()
+    parsedRequest.method = firstLineData(0)
+    parsedRequest.route = firstLineData(1)
+    parsedRequest.protocol = firstLineData(2)
+    
+    ' Parse the route into path and query parameters
+    IF INSTR(parsedRequest.route, "?") > 0 THEN
+        parsedRequest.query = MID$(parsedRequest.route, INSTR(parsedRequest.route, "?") + 1)
+        parsedRequest.route = LEFT$(parsedRequest.route, INSTR(parsedRequest.route, "?") - 1)
+    END IF
+    
+    
+    ' Parse the headers
+    FOR i = 1 TO(UBOUND(requestLines) - 2)
+        parsedRequest.rawHeaders = parsedRequest.rawHeaders + requestLines(i) + QTTP_CRLF
+    NEXT i
+END SUB

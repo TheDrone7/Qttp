@@ -1,0 +1,8 @@
+# VSCode config can be personal
+.vscode/
+
+# QB64 generated files - executables, backups
+main
+*.bas-bak
+*.bi-bak
+*.bm-bak

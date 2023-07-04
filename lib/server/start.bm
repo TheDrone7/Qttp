@@ -1,0 +1,45 @@
+' Start a HTTP server on the specified port.
+'
+' Syntax: `startServer(port%)`
+'  - `port%` - The port to listen for connections on.
+SUB startServer(userServer AS QttpServer)
+    DIM connectHandle AS LONG
+    DIM request AS STRING
+    
+    DO
+        connectHandle = _OPENCONNECTION(userServer.handler)
+        if connectHandle <> 0 THEN
+            PRINT "" ' New line for clear output
+            PRINT "Connection received: reading request"
+            request = ""
+            DO
+                DIM buffer AS STRING
+                GET #connectHandle, , buffer
+                request = request + buffer
+            LOOP UNTIL INSTR(request, QTTP_CRLF + QTTP_CRLF) > 0
+            
+            ' Print request first line
+            ' Request first line contains the request method, path and HTTP version
+            DIM parsedRequest AS QttpRequest
+            parseRequest request, parsedRequest
+            PRINT "Request received: " + parsedRequest.method + " " + parsedRequest.route
+            DIM response AS STRING
+            if parsedRequest.route = "/" then
+                response = "HTTP/1.1 200 OK" + QTTP_CRLF + _
+                    "Content-Type: text/plain" + QTTP_CRLF + QTTP_CRLF + _
+                    "Hello, World!"
+                
+                ' Send response to client
+                PUT #connectHandle, , response
+            ELSE
+                response = "HTTP/1.1 404 Not Found" + QTTP_CRLF + _
+                    "Content-Type: text/plain" + QTTP_CRLF + QTTP_CRLF + _
+                    "Not Found"
+                
+                ' Send response to client
+                PUT #connectHandle, , response
+            END if
+            CLOSE connectHandle
+        END if
+    LOOP UNTIL INKEY$ = CHR$(13) OR userServer.handler = 0
+END SUB
